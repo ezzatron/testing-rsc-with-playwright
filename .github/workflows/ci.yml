@@ -1,0 +1,74 @@
+name: Continuous integration
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    name: Continuous integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install NPM dependencies
+        run: npm clean-install
+
+      - name: Detect Playwright
+        id: detect-playwright
+        run: |
+          if grep -q playwright package.json; then
+            echo "version=$(npm ls playwright | grep -m1 -oE 'playwright@\S+' | cut -d'@' -f2)" >> "$GITHUB_OUTPUT";
+          else
+            echo "version=" >> "$GITHUB_OUTPUT";
+          fi
+
+      - name: Cache Playwright
+        if: steps.detect-playwright.outputs.version != ''
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ steps.detect-playwright.outputs.version }}-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Install Playwright browsers
+        if: steps.detect-playwright.outputs.version != ''
+        run: npm run playwright:install
+
+      - name: Test
+        run: npm test
+
+      - name: Lint
+        run: npm run lint:check
+
+      - name: Detect artifacts
+        if: "!cancelled()"
+        id: detect-artifacts
+        run: |
+          echo "suffix=${GITHUB_REPOSITORY//\//-}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT";
+          if [ -d playwright-report ]; then echo "playwright=true" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Upload Playwright report
+        if: "!cancelled() && steps.detect-artifacts.outputs.playwright == 'true'"
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ steps.detect-artifacts.outputs.suffix }}
+          path: playwright-report
+
+      - name: Upload package manager files
+        if: "!cancelled()"
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-manager-files-${{ steps.detect-artifacts.outputs.suffix }}
+          if-no-files-found: ignore
+          path: |
+            package-lock.json
+            package.json
