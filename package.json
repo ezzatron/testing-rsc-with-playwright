@@ -2,11 +2,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
     "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint && prettier --write . && tsc --noEmit",
+    "lint:check": "next lint && prettier --check . && tsc --noEmit",
+    "playwright:install": "playwright install --with-deps",
+    "precommit": "npm run test:all && npm run lint && npm run build",
     "start": "next start",
-    "lint": "next lint && npx prettier --write .",
-    "lint:check": "next lint && npx prettier --check ."
+    "test:all": "playwright test --project chromium --project firefox --project webkit",
+    "test": "playwright test"
   },
   "dependencies": {
     "next": "^15.4.2",
@@ -15,6 +19,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@playwright/test": "^1.54.1",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^24.0.15",
     "@types/react": "^19.1.8",
@@ -22,6 +27,7 @@
     "eslint": "^9.31.0",
     "eslint-config-next": "^15.4.2",
     "eslint-config-prettier": "^10.1.8",
+    "playwright": "^1.54.1",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.6.14",
