@@ -9,6 +9,12 @@ jobs:
     name: Continuous integration
     runs-on: ubuntu-latest
 
+    services:
+      wiremock:
+        image: wiremock/wiremock:3.13.1-1
+        ports:
+          - 7358:8080
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4

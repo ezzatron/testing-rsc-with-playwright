@@ -18,7 +18,6 @@ const iphone15 = {
 
 export default defineConfig({
   testDir: "test/playwright",
-  fullyParallel: true,
   retries: 1,
   timeout: isCI ? 30_000 : 10_000,
   reporter: [["dot"], ["html", { open: "never" }]],
@@ -35,7 +34,7 @@ export default defineConfig({
         timeout: 60_000,
         gracefulShutdown: { signal: "SIGINT", timeout: 500 },
         env: {
-          NEXT_PUBLIC_VYRO_TOKEN: "valid-test-token",
+          API_URL: "http://localhost:7358/",
         },
       },
   projects: [
