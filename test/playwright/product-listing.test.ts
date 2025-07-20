@@ -1,15 +1,16 @@
 import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { BodyType, WireMock } from "wiremock-captain";
+import { BodyType, EndpointFeature, WireMock } from "wiremock-captain";
 import productsFixture from "../fixture/api/dummyjson.com/products.json" with { type: "json" };
 
 const wireMock = new WireMock("http://localhost:7358");
 
-test("placeholder", async ({ page }) => {
+test.beforeAll(async () => {
   await wireMock.register(
-    { method: "GET", endpoint: "/products?limit=100" },
+    { method: "GET", endpoint: "/products" },
     { status: 200, body: productsFixture },
+    { requestEndpointFeature: EndpointFeature.UrlPath },
   );
 
   for (const product of productsFixture.products) {
@@ -34,10 +35,22 @@ test("placeholder", async ({ page }) => {
       },
     );
   }
+});
 
+test.afterAll(async () => {
+  await wireMock.clearAllExceptDefault();
+});
+
+test("displays the first product", async ({ page }) => {
   await page.goto("/product-listing");
 
   await expect(
     page.getByRole("img", { name: /Essence Mascara Lash Princess/i }),
   ).toBeVisible();
+});
+
+test("displays the last product", async ({ page }) => {
+  await page.goto("/product-listing");
+
+  await expect(page.getByRole("img", { name: /Apple Airpods/i })).toBeVisible();
 });
