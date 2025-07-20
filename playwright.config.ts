@@ -29,7 +29,7 @@ export default defineConfig({
     ? undefined
     : {
         command: "npx next dev --port 7357",
-        url: "http://localhost:7357/",
+        url: "http://localhost:7357/robots.txt",
         reuseExistingServer: false,
         timeout: 60_000,
         gracefulShutdown: { signal: "SIGINT", timeout: 500 },
