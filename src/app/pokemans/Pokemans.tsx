@@ -26,7 +26,7 @@ export default async function Pokemans({ pageCount }: Props) {
       {data.pokemonspecies.map((s, i) => (
         <div key={s.pokemons[0].id} className="group relative">
           <Image
-            priority={i < PAGE_SIZE}
+            priority={i < 6}
             alt={s.pokemons[0].name + "man"}
             src={s.pokemons[0].pokemonsprites[0].artwork}
             width={475}
