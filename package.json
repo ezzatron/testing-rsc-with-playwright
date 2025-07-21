@@ -11,15 +11,21 @@
     "start": "next start",
     "test:all": "playwright test --project chromium --project firefox --project webkit",
     "test": "playwright test",
-    "wiremock": "docker run -it --rm -p 7358:8080 wiremock/wiremock:3.13.1-1"
+    "wiremock": "docker run -it --rm -p 7358:8080 wiremock/wiremock:3.13.1-1",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@urql/next": "^1.1.5",
+    "graphql": "^16.11.0",
     "next": "^15.4.2",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "urql": "^4.2.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@graphql-codegen/cli": "5.0.7",
+    "@graphql-codegen/client-preset": "4.8.3",
     "@playwright/test": "^1.54.1",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^24.0.15",

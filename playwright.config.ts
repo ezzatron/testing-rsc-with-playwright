@@ -34,7 +34,7 @@ export default defineConfig({
         timeout: 60_000,
         gracefulShutdown: { signal: "SIGINT", timeout: 500 },
         env: {
-          API_URL: "http://localhost:7358/",
+          API_URL: "http://localhost:7358/graphql",
         },
       },
   projects: [

@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   redirects: async () => [
     {
       source: "/",
-      destination: "/product-listing",
+      destination: "/pokemans",
       permanent: false,
     },
   ],
@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cdn.dummyjson.com",
-        pathname: "/product-images/**",
+        hostname: "raw.githubusercontent.com",
+        pathname: "/PokeAPI/**",
       },
     ],
   },
