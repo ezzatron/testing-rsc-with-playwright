@@ -1,6 +1,6 @@
-import { getClient } from "@/client";
-import { graphql } from "@/gql";
 import Image from "next/image";
+import { getClient } from "../../client";
+import { graphql } from "../../gql";
 
 export default async function Pokemans() {
   const result = await getClient().query(ListPokemans, {
