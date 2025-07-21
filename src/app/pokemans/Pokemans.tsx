@@ -2,10 +2,16 @@ import Image from "next/image";
 import { getClient } from "../../client";
 import { graphql } from "../../gql";
 
-export default async function Pokemans() {
+const PAGE_SIZE = 12;
+
+type Props = {
+  pageCount: number;
+};
+
+export default async function Pokemans({ pageCount }: Props) {
   const result = await getClient().query(ListPokemans, {
     offset: 0,
-    limit: 151,
+    limit: pageCount * PAGE_SIZE,
   });
   const { data, error } = result;
 
@@ -20,7 +26,7 @@ export default async function Pokemans() {
       {data.pokemonspecies.map((s, i) => (
         <div key={s.pokemons[0].id} className="group relative">
           <Image
-            priority={i < 6}
+            priority={i < PAGE_SIZE}
             alt={s.pokemons[0].name + "man"}
             src={s.pokemons[0].pokemonsprites[0].artwork}
             width={475}
