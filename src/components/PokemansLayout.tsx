@@ -14,9 +14,10 @@ export default function PokemansLayout({ species }: Props) {
         </h2>
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-          {species.map((s) => (
+          {species.map((s, i) => (
             <div key={s.pokemons[0].id} className="group relative">
               <Image
+                priority={i < 12} // Load first 12 images eagerly
                 alt={s.pokemons[0].name + "man"}
                 src={s.pokemons[0].pokemonsprites[0].artwork}
                 width={475}
