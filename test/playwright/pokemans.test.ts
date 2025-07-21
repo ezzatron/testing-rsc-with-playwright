@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { EndpointFeature, WireMock } from "wiremock-captain";
+import { WireMockAPI } from "wiremock-captain";
 import pokemansFixture from "../fixture/pokemans.json" with { type: "json" };
 
-const wireMock = new WireMock("http://localhost:7358");
+const wireMock = new WireMockAPI("http://localhost:7358", "/graphql", "POST", {
+  requestIgnoreExtraElements: true,
+});
 
 function slicePokemansFixture(pageCount: number) {
   return {
@@ -18,34 +20,22 @@ function slicePokemansFixture(pageCount: number) {
 test.beforeAll(async () => {
   await wireMock.register(
     {
-      method: "POST",
-      endpoint: "/graphql",
       body: {
         operationName: "ListPokemans",
         variables: { offset: 0, limit: 12 },
       },
     },
     { status: 200, body: slicePokemansFixture(1) },
-    {
-      requestIgnoreExtraElements: true,
-      requestEndpointFeature: EndpointFeature.UrlPath,
-    },
   );
 
   await wireMock.register(
     {
-      method: "POST",
-      endpoint: "/graphql",
       body: {
         operationName: "ListPokemans",
         variables: { offset: 0, limit: 24 },
       },
     },
     { status: 200, body: slicePokemansFixture(2) },
-    {
-      requestIgnoreExtraElements: true,
-      requestEndpointFeature: EndpointFeature.UrlPath,
-    },
   );
 });
 
