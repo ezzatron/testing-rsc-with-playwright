@@ -1,16 +1,11 @@
+"use client";
+
+import { useState } from "react";
 import LoadMore from "./LoadMore";
 import Pokemans from "./Pokemans";
 
-type SearchParams = {
-  [key: string]: string | string[] | undefined;
-};
-
-type Props = {
-  searchParams: Promise<SearchParams>;
-};
-
-export default async function PokemansPage({ searchParams }: Props) {
-  const pageCount = parsePageCount(await searchParams);
+export default function PokemansPage() {
+  const [pageCount, setPageCount] = useState(1);
 
   return (
     <div className="bg-white">
@@ -23,18 +18,8 @@ export default async function PokemansPage({ searchParams }: Props) {
           <Pokemans pageCount={pageCount} />
         </div>
 
-        <LoadMore pageCount={pageCount} />
+        <LoadMore setPageCount={setPageCount} />
       </div>
     </div>
   );
-}
-
-function parsePageCount({ pages }: SearchParams): number {
-  if (typeof pages !== "string") return 1;
-
-  const parsed = parseInt(pages, 10);
-
-  if (isNaN(parsed) || parsed < 1 || parsed > 10) return 1;
-
-  return parsed;
 }
